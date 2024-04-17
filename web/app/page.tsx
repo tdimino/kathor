@@ -28,27 +28,31 @@ export default function Page() {
     onNewMessage: async (stream: AsyncIterable<string>, type: string) => {
       setIsThinking(type === 'thinks');
       let fullMessage = '';
-      for await (const messageChunk of stream) {
-        fullMessage += messageChunk;
+      try {
+        for await (const messageChunk of stream) {
+          fullMessage += messageChunk;
+        }
+        if (type === 'answers') {
+          const audioUrl = await convertTextToSpeech(fullMessage, process.env.NEXT_PUBLIC_ELEVEN_LABS_VOICE_ID!);
+          const audio = new Audio(audioUrl);
+          audio.play();
+        }
+        setMessages((prev) => [
+          ...prev,
+          {
+            type: "soul",
+            content: fullMessage,
+            messageType: type,
+          },
+        ]);
+      } catch (error) {
+        console.error("Error processing message:", error);
+      } finally {
+        setIsThinking(false); // Ensure isThinking is set to false when done
       }
-      if (type === 'answers') {
-        const audioUrl = await convertTextToSpeech(fullMessage, process.env.NEXT_PUBLIC_ELEVEN_LABS_VOICE_ID!);
-        const audio = new Audio(audioUrl);
-        audio.play();
-      }
-      setMessages((prev) => [
-        ...prev,
-        {
-          type: "soul",
-          content: fullMessage,
-          messageType: type,
-        },
-      ]);
     },
     onProcessStarted: () => {
-      if (!isThinking) {
-        setIsThinking(true);
-      }
+      setIsThinking(true);
     },
   });
 
