@@ -75,7 +75,7 @@ export default function Page() {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'xi-api-key': process.env.NEXT_PUBLIC_ELEVEN_LABS_API_KEY, 
+        'xi-api-key': process.env.NEXT_PUBLIC_ELEVEN_LABS_API_KEY || '',
       },
       body: JSON.stringify({
         text: text,
