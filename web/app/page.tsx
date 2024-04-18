@@ -74,13 +74,13 @@ export default function Page() {
     window.scrollTo(0, document.body.scrollHeight);
   }
 
-  async function convertTextToSpeech(text: string, voiceId: string) {
+  async function convertTextToSpeech(text: string, voice_id: string) {
     const response = await fetch('/api/tts', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ text, voiceId })
+      body: JSON.stringify({ text, voice_id })
     });
 
     if (!response.ok) {
