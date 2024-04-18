@@ -48,7 +48,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   };
 
   try {
-    const apiResponse = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voice_id}`, options);
+    const apiResponse = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voice_id}/stream`, options);
     if (!apiResponse.ok) throw new Error('Failed to convert text to speech');
 
     const audioBlob = await apiResponse.blob();
