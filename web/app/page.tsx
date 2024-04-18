@@ -48,7 +48,7 @@ export default function Page() {
       } catch (error) {
         console.error("Error processing message:", error);
       } finally {
-        setIsThinking(false); 
+        setIsThinking(false); // Ensure isThinking is set to false when done
       }
     },
     onProcessStarted: () => {
@@ -74,14 +74,27 @@ export default function Page() {
     window.scrollTo(0, document.body.scrollHeight);
   }
 
-  async function convertTextToSpeech(text: string, voice_id: string) {
-    const response = await fetch('/api/tts', {
+  async function convertTextToSpeech(text: string, voiceId: string) {
+    const options = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'xi-api-key': process.env.ELEVEN_LABS_API_KEY || '',
       },
-      body: JSON.stringify({ text, voice_id })
-    });
+      body: JSON.stringify({
+        text: text,
+        model_id: process.env.NEXT_PUBLIC_ELEVEN_LABS_MODEL_ID,
+        voice_settings: {
+          stability: 0.5,
+          similarity_boost: 0.8,
+          style: 0.0,
+          use_speaker_boost: true
+        },
+        // Include pronunciation_dictionary_locators if needed
+      })
+    };
+
+    const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, options);
 
     if (!response.ok) {
       const errorBody = await response.text();
@@ -89,8 +102,8 @@ export default function Page() {
       throw new Error('Failed to convert text to speech');
     }
 
-    const { audioUrl } = await response.json();
-    return audioUrl;
+    const audioBlob = await response.blob();
+    return URL.createObjectURL(audioBlob);
   }
 
   return (
