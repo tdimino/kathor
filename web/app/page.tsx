@@ -74,9 +74,8 @@ export default function Page() {
     window.scrollTo(0, document.body.scrollHeight);
   }
 
-  async function convertTextToSpeech(text: string) {
-    const voiceId = process.env.NEXT_PUBLIC_ELEVEN_LABS_VOICE_ID;
-    const response = await fetch('/api/convertTextToSpeech', {
+  async function convertTextToSpeech(text: string, voiceId: string) {
+    const response = await fetch('/api/tts', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
