@@ -4,7 +4,7 @@ import Cors from 'cors';
 // Initializing the cors middleware with specific options
 const cors = Cors({
   methods: ['POST'], // Allow only POST method for this endpoint
-  origin: 'https://api.elevenlabs.io', // Specific origin or true for all origins
+  origin: 'https://kathor.vercel.app', // Specific origin or true for all origins
 });
 
 // Helper method to run middleware
@@ -48,7 +48,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   };
 
   try {
-    const apiResponse = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voice_id}/stream`, options);
+    const apiResponse = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voice_id}`, options);
     if (!apiResponse.ok) throw new Error('Failed to convert text to speech');
 
     const audioBlob = await apiResponse.blob();
